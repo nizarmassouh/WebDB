@@ -1,6 +1,7 @@
 ## A python implementation of the IROS 2017 paper: [Learning Deep Visual Object Models From Noisy Web Data: How to Make it Work](https://www.researchgate.net/publication/314115657_Learning_Deep_Visual_Object_Models_From_Noisy_Web_Data_How_to_Make_it_Work)
 For the creation of image databases from the web.
 This software will expand a list of visual queries and download images from 3 search engines (google, yahoo and bing).
+
 to expand a list of queries:
 run: expand.sh with 1 argument (the list of queries as a line separated list)
 

@@ -14,14 +14,14 @@ URL = "https://images.search.yahoo.com/search/images;?p="
 images = []
 pathf= sys.argv[2]+"/"
 pathh = pathf+sys.argv[3]+".yahoo."+sys.argv[1]+'*'
-print pathh
+print(pathh)
 if not os.path.exists(sys.argv[2]):
-	try:
-	    os.makedirs(sys.argv[2])
-	except OSError as e:
-	    pass
+    try:
+        os.makedirs(sys.argv[2])
+    except OSError as e:
+        pass
 elif len(glob.glob(pathh))>0:
-    print "Directory exists ... moving on!"
+    print("Directory exists ... moving on!")
     quit()
 
 def get_images(query, start):
@@ -36,11 +36,11 @@ def get_images(query, start):
 
 
 for x in range(1, 20):
-	get_images(sys.argv[1], x)
+    get_images(sys.argv[1], x)
 
-print "yahoo: download of "+str(len(images))+" images has started"
+print("yahoo: download of "+str(len(images))+" images has started")
 for i,y in enumerate(images):
-	try:
-	    urllib.urlretrieve(y , str(sys.argv[2])+"/"+str(sys.argv[3])+'.yahoo.'+str(sys.argv[1])+'.'+str(i)+".jpg")
-	except:
-	    pass
+    try:
+        urllib.urlretrieve(y , str(sys.argv[2])+"/"+str(sys.argv[3])+'.yahoo.'+str(sys.argv[1])+'.'+str(i)+".jpg")
+    except:
+        pass

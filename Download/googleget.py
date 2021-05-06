@@ -9,10 +9,13 @@ from urllib.request import urlopen
 from random import randint
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 
+chrome_options = Options()
+chrome_options.add_argument("--headless")
 # os.environ['http_proxy'] = ''
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(options=chrome_options)
 s = requests.session()
 s.headers.update({"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36"})
 URL = "https://www.google.com/search"
@@ -29,7 +32,6 @@ if len(glob.glob(pathh)) > 0:
 def get_images(query, start):
     count = 0
     url = URL + "?q=" + query.lower() + "&start=" + str(start) + "&tbm=isch&sa=X&ijn=" + str(start / 100) + "&tbs=itp:photo&num=10000"
-    # page = urlopen(url.replace("'", "")).read()
     driver.get(url)
     request = driver.page_source
     bs = BeautifulSoup(request, features="html.parser")
@@ -41,9 +43,6 @@ def get_images(query, start):
             images.append(ss)
         except Exception:
             count += 1
-    # for img in bs.findAll("div", {"class": "rg_bx rg_di rg_el ivg-i"}):
-    #     ss = (img.find('img').attrs['data-src'])
-    #     images.append(ss)
     print(f"number div tags with no image src is {count}")
 
 
@@ -54,3 +53,4 @@ for x in range(0, 10):
 print("google: download of " + str(len(images)) + " images has started")
 for i, y in enumerate(images):
     urllib.request.urlretrieve(y, str(sys.argv[2]) + "/" + str(sys.argv[3]) + '.google.' + str(sys.argv[2]) + '.' + str(i) + ".jpg")
+print("google: download completed successfully!!")

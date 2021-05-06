@@ -28,7 +28,7 @@ if len(glob.glob(pathh)) > 0:
 
 def get_images(query, start):
     count = 0
-    url = URL + "?q=" + query.lower() + "&start=" + str(start) + "&tbm=isch&sa=X&ijn=" + str(start / 100) + "&tbs=itp:photo&num=1000"
+    url = URL + "?q=" + query.lower() + "&start=" + str(start) + "&tbm=isch&sa=X&ijn=" + str(start / 100) + "&tbs=itp:photo&num=10000"
     # page = urlopen(url.replace("'", "")).read()
     driver.get(url)
     request = driver.page_source

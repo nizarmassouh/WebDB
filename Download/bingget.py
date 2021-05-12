@@ -15,14 +15,14 @@ parser.add_argument("--run_headless", action='store_true', help='Runs the script
 parser.add_argument("--index", type=int, help='Index number that is iterated for each search query when script is launched from download.py')
 args = parser.parse_args()
 
+search_engine = "bing"
+file_format = f"{args.index}_{search_engine}_{args.query}"
 # check if save_image_dir contains data and exit if data already present.
-check_directory_contains_data(args.save_image_dir)
+check_directory_contains_data(args.save_image_dir, file_format)
 
 # prepare the Firefox webdriver
 driver = get_selenium_driver(args.run_headless)
-
 images = []
-search_engine = "bing"
 
 
 def get_images(query):
@@ -57,9 +57,8 @@ driver.close()
 
 total_image_links = len(images)
 images = set(images)
-print(f"Total image links count is {total_image_links}")
-print(f"Total Duplicate links is {total_image_links - len(images)}")
+print(f"Total image links: {total_image_links}")
+print(f"Total Duplicate links: {total_image_links - len(images)}")
 
-file_format = f"{args.index}_{search_engine}_{args.query}"
 download_images(images, args.save_image_dir, file_format)
 print(f"{search_engine}: Download completed successfully!!")

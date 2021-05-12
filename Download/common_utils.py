@@ -1,4 +1,6 @@
+import glob
 import os
+import sys
 import time
 from random import randint
 from urllib.request import urlretrieve
@@ -71,10 +73,12 @@ def download_images(list_of_images, image_dir, file_format):
     return index
 
 
-def check_directory_contains_data(image_dir):
+def check_directory_contains_data(image_dir, file_format):
     # Exit if directory contains data.
     os.makedirs(image_dir, exist_ok=True)
-    if len(os.listdir(image_dir)) > 0:
+    file_path = os.path.join(image_dir, file_format) + "*"
+    print(file_path)
+    if len(glob.glob(file_path)) > 0:
         print("Directory contains data...Exiting.")
         sys.exit()
 

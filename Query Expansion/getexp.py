@@ -15,8 +15,6 @@ def get_exp(query):
     driver.maximize_window()
     driver.implicitly_wait(10)
     base_url = str(URL + str(sys.argv[1]))
-    verificationErrors = []
-    accept_next_alert = True
     driver.get(base_url)
     try:
         time.sleep(1)
@@ -28,11 +26,11 @@ def get_exp(query):
                 if ss not in query:
                     expansions.append(query + " " + ss)
                     keys.write(ss + ' ')
-            except Exception:
-                continue
+            except Exception as e:
+                print(f"exception while getting checkboxes: {e}")
         keys.write("\n")
-    except Exception:
-        continue
+    except Exception as e:
+        print(f"exception while parsing html: {e}")
     driver.close()
 
 

@@ -30,12 +30,16 @@ The expanded query will be saved to the file `expandedqueries.txt`
 
 ### Download Web Images
 
-User can download the images by running download.py using 2 arguments:
+User can download the images by running download.py using 3 arguments:
 example:  
 
 ```bash
-python download.py --queries queries.txt --directories dirnames.txt
+python download.py --queries queries.txt --directories dirnames.txt --run_headless
 ```
+
+* `--queries` A file containing the search queries
+* `--directories`: A file containing the directory name where the downloaded images are stored
+* `--run_headless`: Argument that doesn't display the browser when script runs. Don't pass this argument when you don't need to visualize the script in action. This is useful for debugging purposes and check if scripts navigates to the correct page.
 
 where queries.txt is a text file with a list of queries and dirnames.txt is the equivalent directory name of each query line by line.
 

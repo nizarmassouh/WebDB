@@ -25,6 +25,5 @@ for line, dirs in zip(queries, dirnames):
         run_headless = "--run_headless" if args.run_headless else ""
         os.system(f"python ./Download/bingget.py --query '{query}' --save_image_dir {dirs} --index {str(i)} {run_headless}")
         os.system(f"python ./Download/googleget.py --query '{query}' --save_image_dir {dirs} --index {str(i)} {run_headless}")
-        # FIXME find a way to disable accepting cookies or handle this in the script
-        # os.system(f"python ./Download/yahooget.py --query '{query}' --save_image_dir {dirs} --index {str(i)} {run_headless}")
+        os.system(f"python ./Download/yahooget.py --query '{query}' --save_image_dir {dirs} --index {str(i)} {run_headless}")
         time.sleep(2)

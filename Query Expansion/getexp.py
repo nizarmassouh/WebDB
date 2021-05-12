@@ -3,7 +3,7 @@ import time
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
-# argument is query
+from selenium.webdriver.firefox.options import Options
 
 URL = "http://mykeyworder.com/keywords?tags="
 expansions = []
@@ -11,8 +11,9 @@ expansions = []
 
 def get_exp(query):
     keys = open('Keys.txt', 'a')
-    driver = webdriver.Firefox()
-    driver.maximize_window()
+    browser_options = Options()
+    browser_options.add_argument("--headless")
+    driver = webdriver.Firefox(options=browser_options)
     driver.implicitly_wait(10)
     base_url = str(URL + str(sys.argv[1]))
     driver.get(base_url)
@@ -27,7 +28,7 @@ def get_exp(query):
                     expansions.append(query + " " + ss)
                     keys.write(ss + ' ')
             except Exception as e:
-                print(f"exception while getting checkboxes: {e}")
+                continue
         keys.write("\n")
     except Exception as e:
         print(f"exception while parsing html: {e}")

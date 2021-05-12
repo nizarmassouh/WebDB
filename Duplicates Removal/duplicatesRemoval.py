@@ -47,6 +47,7 @@ def find_similar_images(userpath):
                     images[image_hash] = img
             print(stats)
             text_file.write(str(stats) + str("\n"))
+            text_file.close()
 
 
 print("searching for duplicates")

@@ -14,27 +14,38 @@ This software will expand a list of visual queries and download images from 3 se
 * [User-Agent addon for Firefox](https://addons.mozilla.org/en-US/firefox/addon/user-agent-string-switcher/)
 
 #### Setting up Firefox Webdriver
-Extract the contents of the downloaded file.
-For file with `.zip` extension use `unzip <filename>` or for file with `.tar.gz` extension use `tar -xvf <filename>`
+
+There are couple of ways to install Firefox Webdriver. 
+
+* If you are on Ubuntu based distribution `sudo apt-get install firefox-geckodriver` would install the Firefox webdriver.
+
+or
+
+* Extract the contents of the downloaded file.
+File ending with `.zip` extension use `unzip <filename>` or file ending with `.tar.gz` extension use `tar -xvf <filename>`
 
 Finally, add the extracted file to `$PATH`. Refer [how to add executables to PATH](https://www.selenium.dev/documentation/en/webdriver/driver_requirements/#adding-executables-to-your-path)
 
 #### Install User Agent Addon
 
-If you encounter any error or pop ups which asks for cookies that doesn't appear when the search is launched by the user. Ensure the `User-Agent` is recent with respect to your browser version.
+If you encounter any error or pop up which asks for cookies that doesn't appear when the search is launched by the user. Ensure the `User-Agent` is recent with respect to your browser version.
 
-Refer common "How to debug the script"
+Refer to the section "[How to debug](#how-to-debug)"
 
-This addon is required only for debugging purpose change user agent
+This addon is required only for debugging purposes.
 ### Create Expanded Query list
-run the bash file `expand.sh` with 1 argument (the list of queries as a line separated list) from terminal
+
+The query expansion works by finding the top 50 keywords that best match the initial query using [www.keywordfinder.com](www.keywordfinder.com). The result is initial query appened by each keyword found.
+e.g. If initial query is `dog` the query expansion output would be `dog animal`, `dog pet`. etc.
+
+Run the bash script `expand.sh` with 1 argument file containing (the list of queries that are separated by line) from terminal
 
 For e.g.
 ```bash
 sh expand.sh queries.txt
 ```
 
-The expanded query will be saved to the file `expandedqueries.txt`
+The expanded query will be saved to the file `expanded_queries.txt` with entries comma separated.
 
 ### Download Web Images
 
@@ -42,14 +53,14 @@ User can download the images by running download.py using 3 arguments:
 example:
 
 ```bash
-python download.py --queries queries.txt --directories dirnames.txt --run_headless
+python download.py --queries <queries.txt or expanded_queries.txt> --directories dirnames.txt --run_headless
 ```
 
-* `--queries` A file containing the search queries
+* `--queries` A file containing the search queries or the expanded queries.
 * `--directories`: A file containing the directory name where the downloaded images are stored
-* `--run_headless`: Argument that doesn't display the browser when script runs. Don't pass this argument when you don't need to visualize the script in action. This is useful for debugging purposes and check if scripts navigates to the correct page.
+* `--run_headless`: Argument that doesn't display the browser when script runs. Don't pass this argument when you don't need to visualize the script in action. This is useful for debugging purposes and browser navigation works as expected.
 
-where queries.txt is a text file with a list of queries and dirnames.txt is the equivalent directory name of each query line by line.
+where queries.txt is a text file containing list of queries and dirnames.txt is the equivalent directory name of each query line by line.
 
 
 		queries.txt:	query1
@@ -68,22 +79,22 @@ In case of query expansion the queries provided on the same line separated with 
   		     ...                                               ...
 
 
-### How to debug:
+### How to debug
 
 All the search engines constantly try to introduce changes to their webpages in order to restrict webscraping, therefore scripts in this repository requires maintenance when they break.
 
-We provide very basic method for debugging the scripts.
+We provide very basic methods for debugging the scripts.
 
-* We try to catch and log the exceptions in the console during HTML parsing or image retrevial. Looking at the stack trace would help identify the root cause.
+* We try to catch and log the exceptions in the console during HTML parsing or image retrevial. Analysing the stack trace could help identify the root cause.
 * Visualizing the selenium action on the browser could help quickly identify any browser rendering issue. Remove `--run_headless` flag argument when invoking `download.py`.
 * We use [css selectors](https://www.w3schools.com/cssref/css_selectors.asp) in order get unqiuely identify selector tags in the webpage. Seach engines could update these tags which might cause the script to fail.
 * Ensure you are using the latest version of Firefox browser and update the `User-Agent` accordingly. Depending upon browser version and User-Agent the page might render differently which could cause the script to fail.
 * If you observe slower network speed. Try increasing the script sleep time.
 
-The script is expected to run slower with varying sleep times. This is mimic human behaviour and not to flood server with constant requests. 
+The script is expected to run slower with varying sleep times. This is mimic human behaviour and not to flood server with constant requests.
 `Warning:` Repated requests with almost no wait time could lead to blacklisting of the user's IP.
 
-### How to use css selector:
+### How to use css selector
 * How to check tags are uniquely identified.
 	* Open Firefox, Navigate to "www.google.com"
 	* Press `F12` to open the developer tools

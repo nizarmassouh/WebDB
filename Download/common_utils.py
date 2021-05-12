@@ -1,3 +1,4 @@
+import argparse
 import glob
 import os
 import sys
@@ -17,6 +18,16 @@ MAP_URLS = {
     "google": "https://www.google.com/search",
     "yahoo": "https://images.search.yahoo.com/search/images"
 }
+
+
+def get_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--query", type=str, help='query for which images are searched and downloaded')
+    parser.add_argument("--save_image_dir", type=str, help='path to save the downloaded images')
+    parser.add_argument("--run_headless", action='store_true', help='Runs the script on browser without displaying the browser in GUI.')
+    parser.add_argument("--index", type=int, help='Index number that is iterated for each search query when script is launched from download.py')
+    args = parser.parse_args()
+    return args
 
 
 def get_selenium_driver(headless):

@@ -9,10 +9,15 @@ This software will expand a list of visual queries and download images from 3 se
 * Python 3.6 or above
 * Selenium
 * BeautifulSoup
-* Chromium browser
-* [Chromium webdriver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+* Firefox
+* [Firefox webdriver](https://github.com/mozilla/geckodriver/releases)
 
-Note: The chromium webdriver should match the chrome browser installed in the users system.
+Extract the contents of the downloaded file. 
+If file has `.zip` extension use `unzip <filename>`
+For file with `.tar.gz` extension use `tar -xvf <filename>`
+
+Finally, ensure to add the extracted file to the `$PATH`. 
+[How to add executables to PATH](https://www.selenium.dev/documentation/en/webdriver/driver_requirements/#adding-executables-to-your-path)
 ### Create Expanded Query list
 run the bash file `expand.sh` with 1 argument (the list of queries as a line separated list) from terminal
 

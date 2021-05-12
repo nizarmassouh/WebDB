@@ -8,7 +8,7 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
 
 profile = webdriver.FirefoxProfile()
-profile.set_preference("general.useragent.override", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36")
+profile.set_preference("general.useragent.override", "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36")
 
 MAP_URLS = {
     "bing": "https://www.bing.com/images/search",
@@ -21,7 +21,6 @@ def get_selenium_driver(headless):
     browser_options = Options()
     if headless:
         browser_options.add_argument("--headless")
-    # browser_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36")
 
     # create webdriver Firefox instance
     driver = webdriver.Firefox(options=browser_options, firefox_profile=profile)

@@ -1,51 +1,65 @@
-import glob
-import os
-import requests
-import sys
-import time
-import urllib
+import argparse
 
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from bs4 import BeautifulSoup
 
-os.environ['http_proxy'] = ''
-s = requests.session()
-s.headers.update({"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36"})
-URL = "http://www.bing.com/images/async?q=" + sys.argv[1] + "&count=150&lostate=r&mmasync=1&dgState=x*1039_y*1099_h*208_c*5_i*36_r*6%22"
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
+
+from common_utils import get_selenium_driver, scroll_till_element_is_found, scroll_down, download_images, check_directory_contains_data, get_url
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--query", type=str, help='query for which images are searched and downloaded')
+parser.add_argument("--save_image_dir", type=str, help='path to save the downloaded images')
+parser.add_argument("--run_headless", action='store_true', help='Runs the script on browser without displaying the browser in GUI.')
+parser.add_argument("--index", type=int, help='Index number that is iterated for each search query when script is launched from download.py')
+args = parser.parse_args()
+
+# check if save_image_dir contains data and exit if data already present.
+check_directory_contains_data(args.save_image_dir)
+
+# prepare the Firefox webdriver
+driver = get_selenium_driver(args.run_headless)
+
 images = []
-pathf = sys.argv[2] + "/"
-pathh = pathf + sys.argv[3] + ".bing." + sys.argv[1] + '*'
-
-os.makedirs(sys.argv[2], exist_ok=True)
-if len(glob.glob(pathh)) > 0:
-    print("Directory exists ... moving on!")
-    quit()
+search_engine = "bing"
 
 
-def get_images(query, st):
+def get_images(query):
     count = 0
-    url = URL + "&first=" + str(st)
-    request = s.get(url)
-    bs = BeautifulSoup(request.text, features="html.parser")
-    for img in bs.findAll('img'):
+    url = get_url(args.query, search_engine)
+    print(url)
+    driver.get(url)
+
+    scroll_down(driver)
+    more_results_button = driver.find_element_by_css_selector(".btn_seemore.cbtn.mBtn")
+
+    try:
+        more_results_button.click()
+        scroll_down(driver)
+    except NoSuchElementException:
+        print("Element not found.")
+
+    request = driver.page_source
+    bs = BeautifulSoup(request, features="html.parser")
+    tags = bs.findAll("img")
+    for img in tags:
         try:
-            ss = img.attrs['src']
-            images.append(ss)
+            image_links = img.attrs['src']
+            images.append(image_links)
         except Exception:
             count += 1
-            print(f"{img} doesn't have the src attribute")
+    print(f"Number of img tags without src attribute is {count}")
 
 
-for i in range(0, 5):
-    get_images(sys.argv[1], 0 + (i * 160))
+get_images(args.query)
+driver.close()
 
-print("bing: download of " + str(len(images)) + " images has started")
-for i, y in enumerate(images):
-    fil = str(sys.argv[2]) + "/" + str(sys.argv[3]) + '.bing.' + str(sys.argv[1]) + '.' + str(i) + ".jpg"
-    try:
-        urllib.request.urlretrieve(y, fil)
-    except Exception:
-        continue
-print("bing: Download completed successfully!!")
+total_image_links = len(images)
+images = set(images)
+print(f"Total image links count is {total_image_links}")
+print(f"Total Duplicate links is {total_image_links - len(images)}")
+
+file_format = f"{args.index}_{search_engine}_{args.query}"
+download_images(images, args.save_image_dir, file_format)
+print(f"{search_engine}: Download completed successfully!!")

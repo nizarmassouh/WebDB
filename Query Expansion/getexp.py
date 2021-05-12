@@ -1,14 +1,8 @@
 import sys
-from bs4 import BeautifulSoup
 import time
+
+from bs4 import BeautifulSoup
 from selenium import webdriver
-# from selenium.webdriver.common.by import By
-# from selenium.webdriver.common.keys import Keys
-# from selenium.webdriver.support.ui import Select
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.common.exceptions import TimeoutException
-# from selenium.common.exceptions import NoSuchElementException
-# from selenium.common.exceptions import NoAlertPresentException
 # argument is query
 
 URL = "http://mykeyworder.com/keywords?tags="
@@ -16,10 +10,10 @@ expansions = []
 
 
 def get_exp(query):
-    Keys = open('Keys.txt', 'a')
+    keys = open('Keys.txt', 'a')
     driver = webdriver.Firefox()
     driver.maximize_window()
-    driver.implicitly_wait(30)
+    driver.implicitly_wait(10)
     base_url = str(URL + str(sys.argv[1]))
     verificationErrors = []
     accept_next_alert = True
@@ -33,12 +27,12 @@ def get_exp(query):
                 ss = str(x.split("<input checked=\"\" name=\"keywordselect[]\" onclick=\"countCheckboxes()\" type=\"checkbox\" value=\"")[1]).split("\"/>")[0]
                 if ss not in query:
                     expansions.append(query + " " + ss)
-                    Keys.write(ss + ' ')
+                    keys.write(ss + ' ')
             except Exception:
-                pass
-        Keys.write("\n")
+                continue
+        keys.write("\n")
     except Exception:
-        pass
+        continue
     driver.close()
 
 

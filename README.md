@@ -11,31 +11,28 @@ This software will expand a list of visual queries and download images from 3 se
 * [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/#Download) 4.9.3 or above
 * Firefox
 * [Firefox webdriver](https://github.com/mozilla/geckodriver/releases)
-* [User-Agent addon for Firefox](https://addons.mozilla.org/en-US/firefox/addon/user-agent-string-switcher/)
 
 #### Setting up Firefox Webdriver
+There are couple of ways to install Firefox Webdriver.
 
-There are couple of ways to install Firefox Webdriver. 
 
-* If you are on Ubuntu based distribution `sudo apt-get install firefox-geckodriver` would install the Firefox webdriver.
+* If you are on Ubuntu based distribution `sudo apt-get install firefox-geckodriver` would install the Firefox webdriver. by default the driver is added to the `$PATH`.
 
 or
 
 * Extract the contents of the downloaded file.
-File ending with `.zip` extension use `unzip <filename>` or file ending with `.tar.gz` extension use `tar -xvf <filename>`
+For file ending with `.zip` extension use `unzip <filename>` or file ending with `.tar.gz` extension use `tar -xvf <filename>`
 
-Finally, add the extracted file to `$PATH`. Refer [how to add executables to PATH](https://www.selenium.dev/documentation/en/webdriver/driver_requirements/#adding-executables-to-your-path)
+* Finally, add the extracted file to `$PATH`. Refer [how to add executables to PATH](https://www.selenium.dev/documentation/en/webdriver/driver_requirements/#adding-executables-to-your-path)
 
-#### Install User Agent Addon
+Once the driver is installed, check by running `geckodriver` in the terminal. User should see similar output.
+> 1621246053648   geckodriver INFO    Listening on 127.0.0.1:4444
 
-If you encounter any error or pop up which asks for cookies that doesn't appear when the search is launched by the user. Ensure the `User-Agent` is recent with respect to your browser version.
+Press `ctrl + c` to close the driver.
 
-Refer to the section "[How to debug](#how-to-debug)"
-
-This addon is required only for debugging purposes.
 ### Create Expanded Query list
 
-The query expansion works by finding the top 50 keywords that best match the initial query using [www.keywordfinder.com](www.keywordfinder.com). The result is initial query appened by each keyword found.
+The query expansion works by finding the top 50 keywords that best match the initial query using [www.keywordfinder.com](www.keywordfinder.com). The result is initial query append by each keyword found.
 e.g. If initial query is `dog` the query expansion output would be `dog animal`, `dog pet`. etc.
 
 Run the bash script `expand.sh` with 1 argument file containing (the list of queries that are separated by line) from terminal
@@ -85,14 +82,14 @@ All the search engines constantly try to introduce changes to their webpages in 
 
 We provide very basic methods for debugging the scripts.
 
-* We try to catch and log the exceptions in the console during HTML parsing or image retrevial. Analysing the stack trace could help identify the root cause.
+* We try to catch and log the exceptions in the console during HTML parsing or image retrieval. Analyzing the stack trace could help identify the root cause.
 * Visualizing the selenium action on the browser could help quickly identify any browser rendering issue. Remove `--run_headless` flag argument when invoking `download.py`.
-* We use [css selectors](https://www.w3schools.com/cssref/css_selectors.asp) in order get unqiuely identify selector tags in the webpage. Seach engines could update these tags which might cause the script to fail.
+* We use [css selectors](https://www.w3schools.com/cssref/css_selectors.asp) in order get uniquely identify selector tags in the webpage. Search engines could update these tags which might cause the script to fail.
 * Ensure you are using the latest version of Firefox browser and update the `User-Agent` accordingly. Depending upon browser version and User-Agent the page might render differently which could cause the script to fail.
 * If you observe slower network speed. Try increasing the script sleep time.
 
-The script is expected to run slower with varying sleep times. This is mimic human behaviour and not to flood server with constant requests.
-`Warning:` Repated requests with almost no wait time could lead to blacklisting of the user's IP.
+The script is expected to run slower with varying sleep times. This is mimic human behavior and not to flood server with constant requests.
+`Warning:` Repeated requests with almost no wait time could lead to blacklisting of the user's IP.
 
 ### How to use css selector
 * How to check tags are uniquely identified.

@@ -20,7 +20,7 @@ for line, dirs in zip(queries, dirnames):
     queries = (line.rstrip()).split(',')  # get list of queries
     for i, query in enumerate(queries):
         dirs = dirs.rstrip()
-        query = query.lstrip(' ')
+        query = query.lstrip(' ')  # Strip empty spaces
         print(f"Downloading {query}: ")
         run_headless = "--run_headless" if args.run_headless else ""
         os.system(f"python ./Download/bingget.py --query '{query}' --save_image_dir {dirs} --index {str(i)} {run_headless}")

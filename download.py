@@ -16,14 +16,15 @@ with open(os.path.join(args.directories)) as f:
     dirnames = f.readlines()
 
 # start crawling the search engines
-for line, dirs in zip(queries, dirnames):
-    queries = (line.rstrip()).split(',')  # get list of queries
-    for i, query in enumerate(queries):
-        dirs = dirs.rstrip()
-        query = query.lstrip(' ')  # Strip empty spaces
+for q_line, d_line in zip(queries, dirnames):
+    queries = q_line.strip().split(',')
+    dirs = d_line.strip().split(',')
+    for i, (query, directory) in enumerate(zip(queries, dirs)):
+        directory = directory.strip()
+        query = query.strip()
         print(f"Downloading {query}: ")
         run_headless = "--run_headless" if args.run_headless else ""
-        os.system(f"python ./Download/bingget.py --query '{query}' --save_image_dir {dirs} --index {str(i)} {run_headless}")
-        os.system(f"python ./Download/googleget.py --query '{query}' --save_image_dir {dirs} --index {str(i)} {run_headless}")
-        os.system(f"python ./Download/yahooget.py --query '{query}' --save_image_dir {dirs} --index {str(i)} {run_headless}")
+        os.system(f"python ./Download/bingget.py --query '{query}' --save_image_dir '{directory}' --index {str(i)} {run_headless}")
+        os.system(f"python ./Download/googleget.py --query '{query}' --save_image_dir '{directory}' --index {str(i)} {run_headless}")
+        os.system(f"python ./Download/yahooget.py --query '{query}' --save_image_dir '{directory}' --index {str(i)} {run_headless}")
         time.sleep(2)

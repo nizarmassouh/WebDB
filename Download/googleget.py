@@ -1,7 +1,5 @@
 from bs4 import BeautifulSoup
 
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 
 from common_utils import get_selenium_driver, scroll_down, download_images, check_directory_contains_data, get_url, get_args, click_button
@@ -45,7 +43,7 @@ def get_images(query):
                 images.append(image_links)
         except Exception:
             count += 1
-    print(f"Number of img tags without src attribute: {count}")
+    print(f"Number of img tags without src attribute or http: {count}")
 
 
 get_images(args.query)

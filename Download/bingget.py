@@ -45,7 +45,7 @@ def get_images(query):
                 images.append(image_links)
         except Exception:
             count += 1
-    print(f"Number of img tags without src attribute: {count}")
+    print(f"Number of img tags without src attribute or http: {count}")
 
 
 get_images(args.query)

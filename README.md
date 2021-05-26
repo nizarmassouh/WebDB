@@ -16,7 +16,7 @@ This software will expand a list of visual queries and download images from 3 se
 There are couple of ways to install Firefox Webdriver.
 
 
-* If you are on Ubuntu based distribution `sudo apt-get install firefox-geckodriver` would install the Firefox webdriver. by default the driver is added to the `$PATH`.
+* If you are on debian based distribution `sudo apt-get install firefox-geckodriver` would install the Firefox webdriver. by default the driver is added to the `$PATH`.
 
 or
 
@@ -57,7 +57,7 @@ python download.py --queries <queries.txt or expanded_queries.txt> --directories
 * `--directories`: A file containing the directory name where the downloaded images are stored
 * `--run_headless`: Argument that doesn't display the browser when script runs. Don't pass this argument when you don't need to visualize the script in action. This is useful for debugging purposes and browser navigation works as expected.
 
-where queries.txt is a text file containing list of queries and dirnames.txt is the equivalent directory name of each query line by line.
+where `queries.txt` is a text file containing list of queries and dirnames.txt is the equivalent directory name of each query line by line.
 
 
 		queries.txt:	query1
@@ -67,7 +67,7 @@ where queries.txt is a text file containing list of queries and dirnames.txt is 
          		 	dir2
 				...
 
-Note: It's also possible to provide single entry in the dirnames.txt file, so that all the images are saved in a single folder.
+Note: It's also possible to provide single entry in the `dirnames.txt` file, so that all the images are saved in a single folder.
 
 In case of query expansion the queries provided on the same line separated with a comma can be downloaded into the same directory name.
 

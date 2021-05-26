@@ -8,10 +8,9 @@ from urllib.request import urlretrieve
 
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.common.keys import Keys
 
 profile = webdriver.FirefoxProfile()
-profile.set_preference("general.useragent.override", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36")
+profile.set_preference("general.useragent.override", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4422.0 Safari/537.36")
 
 MAP_URLS = {
     "bing": "https://www.bing.com/images/search",
@@ -97,7 +96,7 @@ def download_images(list_of_images, image_dir, file_format):
             print(e)
             count += 1
     print(f"Failed to retrieve {count} images")
-    return str(index + 1)  # + 1 as index starts from 0.
+    return str(index - count + 1)  # + 1 as index starts from 0.
 
 
 def check_directory_contains_data(image_dir, file_format):

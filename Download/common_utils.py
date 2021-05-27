@@ -3,14 +3,15 @@ import glob
 import os
 import sys
 import time
+import requests
 from random import randint
-from urllib.request import urlretrieve
 
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 
 profile = webdriver.FirefoxProfile()
-profile.set_preference("general.useragent.override", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4422.0 Safari/537.36")
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4422.0 Safari/537.36"
+profile.set_preference("general.useragent.override", user_agent)
 
 MAP_URLS = {
     "bing": "https://www.bing.com/images/search",
@@ -90,7 +91,9 @@ def download_images(list_of_images, image_dir, file_format):
     for index, image_url in enumerate(list_of_images):
         image_file = os.path.join(image_dir, f"{file_format}_{str(index)}.jpg")
         try:
-            urlretrieve(image_url, image_file)
+            img_request = requests.get(image_url, headers={"User-Agent": user_agent})
+            with open(image_file, "wb") as f:
+                f.write(img_request.content)
             time.sleep(0.5)
         except Exception as e:
             print(e)

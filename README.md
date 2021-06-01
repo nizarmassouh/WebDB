@@ -32,7 +32,7 @@ Press `ctrl + c` to close the driver.
 
 ### Create Expanded Query list
 
-The query expansion works by finding the top 50 keywords that best match the initial query using [www.keywordfinder.com](www.keywordfinder.com). The result is initial query append by each keyword found.
+The query expansion works by finding the top 50 keywords that best match the initial query using [http://mykeyworder.com/keywords](http://mykeyworder.com/keywords). The result is initial query append by each keyword found.
 e.g. If initial query is `dog` the query expansion output would be `dog animal`, `dog pet`. etc.
 
 Run the bash script `expand.sh` with 1 argument file containing (the list of queries that are separated by line) from terminal

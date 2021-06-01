@@ -1,46 +1,69 @@
-import requests
-import os
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
-import requests
-import urllib,time
-import sys
 from bs4 import BeautifulSoup
-import glob
-s = requests.session()
-s.headers.update({"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36"})
-URL = "https://images.search.yahoo.com/search/images;?p="
+
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions
+
+from common_utils import get_selenium_driver, scroll_down, download_images, check_directory_contains_data, get_url, get_args, click_button
+
+args = get_args()
+search_engine = "yahoo"
+file_format = f"{args.index}_{search_engine}_{args.query}"
+# check if save_image_dir contains data and exit if data already present.
+check_directory_contains_data(args.save_image_dir, file_format)
+
+# prepare the Firefox webdriver
+driver = get_selenium_driver(args.run_headless)
 images = []
-pathf= sys.argv[2]+"/"
-pathh = pathf+sys.argv[3]+".yahoo."+sys.argv[1]+'*'
-print pathh
-if not os.path.exists(sys.argv[2]):
-	try:
-	    os.makedirs(sys.argv[2])
-	except OSError as e:
-	    pass
-elif len(glob.glob(pathh))>0:
-    print "Directory exists ... moving on!"
-    quit()
-
-def get_images(query, start):
-    url=URL+str(sys.argv[1])+"&n=60&b="+str(start)+"60"
-    request = s.get(url)
-    bs = BeautifulSoup(request.text)
-    for img in bs.findAll("li", {"class": "ld "}):
-        ss=(img.find('img').attrs['data-src'])
-        images.append(ss)
-
-    
 
 
-for x in range(1, 20):
-	get_images(sys.argv[1], x)
+def get_images(query):
+    """Scrape the images for bing search engine and append the image url to a python list
 
-print "yahoo: download of "+str(len(images))+" images has started"
-for i,y in enumerate(images):
-	try:
-	    urllib.urlretrieve(y , str(sys.argv[2])+"/"+str(sys.argv[3])+'.yahoo.'+str(sys.argv[1])+'.'+str(i)+".jpg")
-	except:
-	    pass
+    Args:
+        query (str): Query for which the images will be downloaded
+    """
+    count = 0
+    url = get_url(args.query, search_engine)
+    print(url)
+    driver.get(url)
+
+    try:
+        if driver.find_element_by_css_selector("form.consent-form").is_displayed():
+            # agree to consent! Easier to click "Agree" than to disagree :-(
+            driver.find_element_by_name('agree').click()
+            # wait till the search is complete
+            WebDriverWait(driver, timeout=5).until(expected_conditions.title_contains("Yahoo Image Search Results"))
+    except NoSuchElementException:
+        logging.info("button not found, proceeding..")
+
+    # Keep scrolling till "get more results" button
+    while driver.find_element_by_css_selector(".ygbt.more-res").is_displayed():
+        # Scroll to the end of the page
+        scroll_down(driver)
+        click_button(driver, ".ygbt.more-res")
+
+    request = driver.page_source
+    bs = BeautifulSoup(request, features="html.parser")
+    tags = bs.findAll("img")
+    for img in tags:
+        try:
+            image_links = img.attrs['data-src']
+            if "http" in image_links:
+                images.append(image_links)
+        except Exception:
+            count += 1
+    print(f"Number of img tags without src attribute or http: {count}")
+
+
+get_images(args.query)
+driver.delete_all_cookies()
+driver.close()
+
+total_image_links = len(images)
+images = set(images)
+print(f"Total image links: {total_image_links}")
+print(f"Total Duplicate links: {total_image_links - len(images)}")
+
+total_downloaded_images = download_images(images, args.save_image_dir, file_format)
+print(f"{search_engine}: {total_downloaded_images} images downloaded successfully!")
